@@ -46,7 +46,7 @@ http://dev.rbtech.info/codeigniter-essencial-mvc-estrutura-diretorios
 
 http://dev.rbtech.info/codeigniter-essencial-mvc-pratica/
 
-#### controller/Base.php
+#### controllers/Base.php
 ```php
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -78,8 +78,95 @@ class Base extends CI_Controller {
  */
 ```
 
+#### controllers/Exemplo1.php
+```php
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Exemplo1 extends CI_Controller {
+
+    function __construct(){
+        parent::__construct();
+        $this->load->model('Exemplo1_model','apelido_model');
+    }
+
+    public function index(){
+        //echo 'Executando método index no controller'; // fins didáticos
+// http://localhost/proj_codeigniter/rbtech-CodeIgniter-Essencial/index.php/exemplo1
+
+        $dados['titulo'] = 'Minha primeira View';
+        $dados['conteudo'] = 'The page you are looking at is being generated dynamically by CodeIgniter.';
+        $this->load->view('exemplo1', $dados);
+    }
+    public function login(){
+        //echo 'Executando método Login no controller '; // fins didáticos
+//http://localhost/proj_codeigniter/rbtech-CodeIgniter-Essencial/index.php/exemplo1/login
+        //echo $this->uri->segment(3); // ../index.php/exemplo1/login/parametro (3 segmento pós index)
+
+        //$this->Exemplo1_model->salvar(); // ../index.php/exemplo1/login
+        $this->apelido_model->salvar(); // ../index.php/exemplo1/login
+    }
+}
+
+```
+
+#### views/Exemplo1.php
+```php
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+?><!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <title>Exemplo de View</title>
+</head>
+<body>
+
+<div id="container">
+    <h1><?php  echo $titulo; ?></h1>
+
+    <div id="body">
+        <p><?php  echo $conteudo; ?></p>
+
+    </div>
+
+
+</div>
+
+</body>
+</html>
+```
+
+#### models/Exemplo1_model.php
+```php
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Exemplo1_model extends CI_Model {
+
+    function __construct(){
+        parent::__construct();
+
+    }
+
+    public function salvar(){
+        //fins didáticos
+        echo 'executando o método SALVAR do MODEL';
+    }
+}
+```
+
+#### config/routers.php
+
+```php
+    $route['default_controller'] = 'welcome';
+    //$route['default_controller'] = 'exemplo1';
+```
+
+
 [Voltar ao Índice](#indice)
 
+---
 
 ## <a name="parte4">CodeIgniter Essencial - Download do curso</a>
 

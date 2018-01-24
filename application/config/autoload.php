@@ -132,4 +132,5 @@ $autoload['language'] = array();
 |
 |	$autoload['model'] = array('first_model' => 'first');
 */
+//$autoload['model'] = array('Exemplo1_model'); //ideal é sempre no construtor da classe
 $autoload['model'] = array();
