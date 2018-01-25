@@ -319,6 +319,119 @@ $route['contact'] = 'pagina/contact';
 
 ## <a name="parte7">CodeIgniter Essencial - Criando um site parte 3</a>
 
+http://dev.rbtech.info/codeigniter-essencial-criando-site-parte-3/
+
+#### controllers/Pagina.php
+```php
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Pagina extends CI_Controller {
+
+    function __construct(){
+        parent::__construct();
+        $this->load->helper('url');
+    }
+
+    public function index(){
+        $dados['titulo'] = 'Site teste 01';
+        $this->load->view('home', $dados);
+    }
+    public function features(){
+        $dados['titulo'] = 'Features - Site teste 01';
+        $this->load->view('features', $dados);
+    }
+    public function news(){
+        $dados['titulo'] = 'News - Site teste 01';
+        $this->load->view('news', $dados);
+    }
+    public function about(){
+        $dados['titulo'] = 'About - Site teste 01';
+        $this->load->view('about', $dados);
+    }
+    public function contact(){
+        $this->load->helper('form');
+        //$this->load->library('form_validation');
+        $this->load->library(array('form_validation','email'));
+
+        $this->form_validation->set_rules('nome','Nome','trim|required');
+        $this->form_validation->set_rules('email','Email','trim|required|valid_email');
+        $this->form_validation->set_rules('assunto','Assunto','trim|required');
+        $this->form_validation->set_rules('mensagem','Mensagem','trim|required');
+
+        if($this->form_validation->run() == FALSE):
+            $dados['formerror'] = validation_errors();
+        else:
+            $dados_form = $this->input->post();
+            //print_r($dados_form);
+            $this->email->from($dados_form['email'],$dados_form['nome']);
+            $this->email->to('suporte@josemalcher.net');
+            $this->email->subject($dados_form['assunto']);
+            $this->email->message($dados_form['mensagem']);
+            if($this->email->send()):
+                $dados['formerror'] = 'Validação OK - ENVIADO PARA O EMAIL';
+            else:
+                $dados['formerror'] = 'Erro ao enviar!';
+            endif;
+        endif;
+        $dados['titulo'] = 'Contact - Site teste 01';
+        $this->load->view('contact', $dados);
+    }
+}
+```
+
+#### views/contact.php
+```php
+<?php $this->load->view('header'); ?>
+	<div id="contents">
+		<div class="section">
+			<h1>Contact</h1>
+			<p>
+				You can replace all this text with your own text. Want an easier solution for a Free Website? Head straight to Wix and immediately start customizing your website! Wix is an online website builder with a simple drag & drop interface, meaning you do the work online and instantly publish to the web. All Wix templates are fully customizable and free to use. Just pick one you like, click Edit, and enter the online editor.
+			</p>
+            <div>
+            <?php
+                if($formerror):
+                    echo '<p>'.$formerror.'</p>';
+                endif;
+                echo form_open('pagina/contact');
+                echo form_label('Seu nome:', 'nome');
+                echo form_input('nome', set_value('nome'));
+                echo '<br>';
+                echo form_label('Email:', 'email');
+                echo form_input('email', set_value('email'));
+                echo '<br>';
+                echo form_label('Assunto:', 'assunto');
+                echo form_input('assunto', set_value('assunto'));
+                echo '<br>';
+                echo form_label('Mensagem:', 'mensagem');
+                echo form_textarea('mensagem', set_value('mensagem'));
+                echo form_submit('enviar', 'Enviar Mensagem >>', array('class'=> 'botao'));
+
+                echo form_close();
+            ?>
+            </div>
+			<!--<form action="">
+				<input type="text" value="Name" onFocus="this.select();" onMouseOut="javascript:return false;"/>
+				<input type="text" value="Email" onFocus="this.select();" onMouseOut="javascript:return false;"/>
+				<input type="text" value="Subject" onFocus="this.select();" onMouseOut="javascript:return false;"/>
+				<textarea></textarea>
+				<input type="submit" value="Send"/>
+			</form>-->
+		</div>
+		<div class="section contact">
+			<p>
+				For Inquiries Please Call: <span>877-433-8137</span>
+			</p>
+			<p>
+				Or you can visit us at: <span>ZeroType<br> 250 Business ParK Angel Green, Sunville 109935</span>
+			</p>
+		</div>
+	</div>
+
+<?php $this->load->view('footer'); ?>
+
+```
 
 [Voltar ao Índice](#indice)
 

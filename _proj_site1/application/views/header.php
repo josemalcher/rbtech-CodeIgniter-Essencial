@@ -30,9 +30,9 @@
 			</ul>
 		</div>
 	</div>
-	<div id="adbox">
+    <!--<div id="adbox">
 		<div class="clearfix">
-			<img src="<?php echo base_url('asserts/images/box.png') ?>" alt="Img" height="342" width="368">
+			<img src="<?php /*echo base_url('asserts/images/box.png') */?>" alt="Img" height="342" width="368">
 			<div>
 				<h1>Ideas?</h1>
 				<h2>That's what we live for.</h2>
@@ -41,4 +41,4 @@
 				</p>
 			</div>
 		</div>
-	</div>
+	</div>-->
