@@ -253,6 +253,65 @@ class Pagina extends CI_Controller {
 
 ## <a name="parte6">CodeIgniter Essencial - Criando um site parte 2</a>
 
+http://dev.rbtech.info/codeigniter-essencial-criando-site-parte-2/
+
+#### controllers/Pagina.php
+```php
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Pagina extends CI_Controller {
+
+    function __construct(){
+        parent::__construct();
+        $this->load->helper('url');
+    }
+
+    public function index(){
+        $dados['titulo'] = 'Site teste 01';
+        $this->load->view('home', $dados);
+    }
+    public function features(){
+        $dados['titulo'] = 'Features - Site teste 01';
+        $this->load->view('features', $dados);
+    }
+    public function news(){
+        $dados['titulo'] = 'News - Site teste 01';
+        $this->load->view('news', $dados);
+    }
+    public function about(){
+        $dados['titulo'] = 'About - Site teste 01';
+        $this->load->view('about', $dados);
+    }
+    public function contact(){
+        $dados['titulo'] = 'Contact - Site teste 01';
+        $this->load->view('contact', $dados);
+    }
+}
+```
+
+#### routers.php
+```php
+$route['default_controller'] = 'pagina';
+$route['404_override'] = '';
+$route['translate_uri_dashes'] = FALSE;
+
+$route['features'] = 'pagina/features';
+$route['news'] = 'pagina/news';
+$route['about'] = 'pagina/about';
+$route['contact'] = 'pagina/contact';
+    // adição do .htaccess para melhorar o nome da url
+```
+
+#### .htaccess
+```
+<IfModule mod_rewrite.c>
+   RewriteEngine On
+   RewriteCond %{REQUEST_FILENAME} !-f
+   RewriteCond %{REQUEST_FILENAME} !-d
+   RewriteRule ^(.*)$ index.php/$1 [L]
+</IfModule>
+```
 
 [Voltar ao Índice](#indice)
 

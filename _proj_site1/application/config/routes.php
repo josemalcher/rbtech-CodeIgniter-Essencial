@@ -52,3 +52,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = 'pagina';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
+
+$route['features'] = 'pagina/features';
+$route['news'] = 'pagina/news';
+$route['about'] = 'pagina/about';
+$route['contact'] = 'pagina/contact';

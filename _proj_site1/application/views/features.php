@@ -1,4 +1,4 @@
-<?php include 'header.php' ?>
+<?php $this->load->view('header'); ?>
 	<div id="contents">
 		<div class="features">
 			<h1>Features</h1>
@@ -6,7 +6,7 @@
 				Change, add, and remove items as you like. If you're having problems editing this website template, then don't hesitate to ask for help on the Forums.
 			</p>
 			<div>
-				<img src="images/recycle.png" alt="Img">
+				<img src="<?php echo base_url('asserts/images/recycle.png') ?>" alt="Img">
 				<h2>Customizable and Easy</h2>
 				<p>
 					You can replace all this text with your own text. Want an easier solution for a Free Website? Head straight to Wix and immediately start customizing your website!
@@ -17,7 +17,7 @@
 				</p>
 			</div>
 			<div>
-				<img src="images/box-of-icons.png" alt="Img">
+				<img src="<?php echo base_url('asserts/images/box-of-icons.png') ?>" alt="Img">
 				<h2>More Design Elements</h2>
 				<p>
 					Wix also offers a ton of free design elements right inside the editor, like images, icons, galleries, videos and large selection of Add Ons and social feeds.
@@ -29,4 +29,4 @@
 			</div>
 		</div>
 	</div>
-	<?php include 'footer.php' ?>
+<?php $this->load->view('footer'); ?>

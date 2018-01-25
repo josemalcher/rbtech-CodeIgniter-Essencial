@@ -1,4 +1,4 @@
-<?php include 'header.php' ?>
+<?php $this->load->view('header'); ?>
 	<div id="contents">
 		<div class="main">
 			<h1>News</h1>
@@ -65,4 +65,4 @@
 			</ul>
 		</div>
 	</div>
-<?php include 'footer.php' ?>
+<?php $this->load->view('footer'); ?>
