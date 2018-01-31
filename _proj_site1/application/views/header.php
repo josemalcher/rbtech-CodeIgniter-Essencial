@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<title><?php echo $titulo ?></title>
 	<link rel="stylesheet" href="<?php echo base_url('asserts/css/style.css') ?>" type="text/css">
+	<link rel="stylesheet" href="<?php echo base_url('asserts/css/bootstrap.css') ?>" type="text/css">
 </head>
 <body>
 	<div id="header">

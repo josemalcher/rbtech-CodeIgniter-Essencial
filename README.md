@@ -439,6 +439,147 @@ class Pagina extends CI_Controller {
 
 ## <a name="parte8">CodeIgniter Essencial - Criando um painel parte 1</a>
 
+#### /application/config/autoload.php
+```php
+$autoload['libraries'] = array('database', 'session');
+$autoload['helper'] = array('url','funcoes');
+```
+
+#### /application/config/config.php
+```php
+$config['index_page'] = '';
+
+```
+
+#### /application/config/database.php
+```php
+$db['default'] = array(
+	'dsn'	=> '',
+	'hostname' => 'localhost',
+	'username' => 'root',
+	'password' => '',
+	'database' => 'cursoci',
+	// (...)
+```
+
+#### /application/config/routes.php
+```php
+$route['post'] = 'pagina';
+$route['post/(:num)'] = 'pagina/post/$1';
+$route['login'] = 'setup/login';
+$route['painel'] = 'setup/login';
+```
+
+#### /helpers/funcoes_helper.php
+```php
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+```
+
+#### /controllers/setup.php
+```php
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Setup extends CI_Controller {
+
+    function __construct(){
+        parent::__construct();
+        $this->load->helper('form');
+        $this->load->library('form_validation');
+        $this->load->model('option_model', 'option');
+    }
+
+    public function index(){
+        if($this->option->get_option('setup_executado') == 1):
+            //setup ok, mostra tela para editar dados de setup
+            redirect('setup/alterar','refresh');
+        else:
+            //não instalado, mostra tela de setup
+            redirect('setup/instalar','refresh');
+        endif;
+    }
+
+    public function instalar(){
+        if($this->option->get_option('setup_executado') == 1):
+            //setup ok, mostra tela para editar dados de setup
+            redirect('setup/alterar','refresh');
+        endif;
+
+        //carrega a view
+        $dados['titulo'] = 'Curso CI - SETUP do sistema';
+        $dados['h2'] = 'SETUP do SISTEMA';
+        $this->load->view('painel/setup',$dados);
+
+    }
+}
+```
+
+#### /models/option_model.php
+```php
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Option_model extends CI_Model {
+
+    function __construct(){
+        parent::__construct();
+    }
+
+    public function get_option($option_name){
+        $this->db->where('option_name', $option_name);
+        $query = $this->db->get('options',1);
+        if($query->num_rows() == 1):
+            $row = $query->row();
+            return $row -> option_value;
+        else:
+            return NULL;
+        endif;
+    }
+ }
+```
+
+#### views/painel/setup.php
+```php
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title><?php echo $titulo ?></title>
+    <link rel="stylesheet" href="<?php echo base_url('asserts/css/style.css') ?>" type="text/css">
+    <link rel="stylesheet" href="<?php echo base_url('asserts/css/bootstrap.css') ?>" type="text/css">
+    <link rel="stylesheet" href="<?php echo base_url('asserts/css/login.css') ?>" type="text/css">
+</head>
+<body class="text-center">
+<?php
+
+        echo form_open('',array('class'=>'form-signin'));
+
+            echo form_label('Nome de Login','login');
+            echo form_input('login',set_value('login'), array('class'=>'form-control'));
+
+            echo form_label('Email Administrador','email');
+            echo form_input('email',set_value('email'), array('class'=>'form-control'));
+
+            echo form_label('Senha','senha');
+            echo form_password('senha',set_value('senha'), array('class'=>'form-control'));
+
+            echo form_label('Repita a Senha','senha2');
+            echo form_password('senha2',set_value('senha2'), array('class'=>'form-control'));
+
+            echo form_submit('enviar','Salvar Dados', array('class'=>'btn btn-primary'));
+
+        echo form_close();
+?>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+<script src="<?php echo base_url('asserts/js/bootstrap.min.js') ?>" ></script>
+
+</body>
+</html>
+```
 
 [Voltar ao Índice](#indice)
 

@@ -57,3 +57,8 @@ $route['features'] = 'pagina/features';
 $route['news'] = 'pagina/news';
 $route['about'] = 'pagina/about';
 $route['contact'] = 'pagina/contact';
+
+$route['post'] = 'pagina';
+$route['post/(:num)'] = 'pagina/post/$1';
+$route['login'] = 'setup/login';
+$route['painel'] = 'setup/login';
