@@ -587,6 +587,182 @@ class Option_model extends CI_Model {
 
 ## <a name="parte9">CodeIgniter Essencial - Criando um painel parte 2</a>
 
+#### /controllers/setup.php
+```php
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Setup extends CI_Controller {
+
+    function __construct(){
+        parent::__construct();
+        $this->load->helper('form');
+        $this->load->library('form_validation');
+        $this->load->model('option_model', 'option');
+    }
+
+    public function index(){
+        if($this->option->get_option('setup_executado') == 1):
+            //setup ok, mostra tela para editar dados de setup
+            redirect('setup/alterar','refresh');
+        else:
+            //não instalado, mostra tela de setup
+            redirect('setup/instalar','refresh');
+        endif;
+    }
+
+    public function instalar(){
+        if($this->option->get_option('setup_executado') == 1):
+            //setup ok, mostra tela para editar dados de setup
+            redirect('setup/alterar','refresh');
+        endif;
+
+        //regras de validação
+        $this->form_validation->set_rules('login','NOME','trim|required|min_length[5]');
+        $this->form_validation->set_rules('email','EMAIL','trim|required|valid_email');
+        $this->form_validation->set_rules('senha','SENHA','trim|required|min_length[6]');
+        $this->form_validation->set_rules('senha2','REPITA SENHA','trim|required|min_length[6]|matches[senha]');
+
+        // verifica a validação
+        if($this->form_validation->run() == FALSE):
+            if(validation_errors()):
+                set_msg(validation_errors());
+            endif;
+        else:
+            $dados_form = $this->input->post();
+            $this->option->update_option('user_login',$dados_form['login']);
+            $this->option->update_option('user_email',$dados_form['email']);
+            $this->option->update_option('user_pass',password_hash($dados_form['senha'],PASSWORD_DEFAULT));
+
+            $inserindo = $this->option->update_option('setup_executado',1);
+            if($inserindo):
+                set_msg('<p>Sistema Instalado, Use os dados para Logar no Sistema</p>');
+                redirect('setup/login','refresh');
+            endif;
+        endif;
+
+        //carrega a view
+        $dados['titulo'] = 'Curso CI - SETUP do sistema';
+        $dados['h1'] = 'SETUP do SISTEMA';
+        $this->load->view('painel/setup',$dados);
+    }
+
+    public function login(){
+        if($this->option->get_option('setup_executado') != 1):
+            //setup não ok, mostrar tela para instalar o sistema
+            redirect('setup/instalar','refresh');
+        endif;
+        //regras de validação
+        $this->form_validation->set_rules('login','NOME','trim|required|min_length[5]');
+        $this->form_validation->set_rules('senha','SENHA','trim|required|min_length[6]');
+
+        // verifica a validação
+        if($this->form_validation->run() == FALSE):
+            if(validation_errors()):
+                set_msg(validation_errors());
+            endif;
+        else:
+            $dados_form = $this->input->post();
+            if($this->option->get_option('user_login') == $dados_form['login']):
+                //usuário existe
+                if(password_verify($dados_form['senha'], $this->option->get_option('user_pass'))):
+                    //senha ok, fazer login
+                    $this->session->set_userdata('login', TRUE);
+                    $this->session->set_userdata('user_login', $dados_form['login']);
+                    $this->session->set_userdata('user_email', $this->option->get_option('user_email'));
+                    // Fazer redirect para a HOME do PAINEL
+                    var_dump($_SESSION); //teste
+                else:
+                    // SENHA incorreta
+                    set_msg('<p>Senha Incorreta</p>');
+                endif;
+            else:
+                // usuário não existe
+                set_msg('<p>USUÀRIO não existe!!</p>');
+            endif;
+
+        endif;
+
+
+
+        //carrega a view
+        $dados['titulo'] = 'Curso CI - SETUP do sistema';
+        $dados['h1'] = 'LOGIN DO SISTEMA';
+        $this->load->view('painel/login',$dados);
+    }
+}
+```
+
+#### _proj_site1/application/helpers/funcoes_helper.php
+```php
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+if(!function_exists('set_msg')):
+    //seta uma mensagem via session para ser lida posteriomente
+    function set_msg($msg = NULL){
+        $ci = & get_instance();
+        $ci->session->set_userdata('aviso',$msg);
+    }
+endif;
+
+if(!function_exists('get_msg')):
+    //retorna uma mensagem definida pela função set_msg
+    function get_msg($destroy=TRUE){
+        $ci = & get_instance();
+        $retorno = $ci->session->userdata('aviso');
+        if($destroy) $ci->session->unset_userdata('aviso');
+        return $retorno;
+    }
+endif;
+
+
+```
+
+#### _proj_site1/application/views/painel/login.php 
+```php
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title><?php echo $titulo ?></title>
+    <link rel="stylesheet" href="<?php echo base_url('asserts/css/style.css') ?>" type="text/css">
+    <link rel="stylesheet" href="<?php echo base_url('asserts/css/bootstrap.css') ?>" type="text/css">
+    <link rel="stylesheet" href="<?php echo base_url('asserts/css/login.css') ?>" type="text/css">
+</head>
+<body class="text-center">
+
+
+<?php
+
+        echo form_open('',array('class'=>'form-signin'));
+        echo '<h2>'. $h1 .'</h2>';
+
+            if($msg = get_msg()):
+                echo '<div class="alert alert-danger">' . $msg .'</div>';
+            endif;
+
+            echo form_label('Usuário','login');
+            echo form_input('login',set_value('login'), array('class'=>'form-control'));
+
+            echo form_label('Senha','senha');
+            echo form_password('senha',set_value('senha'), array('class'=>'form-control'));
+
+            echo form_submit('enviar','Autenticar', array('class'=>'btn btn-primary'));
+
+        echo form_close();
+?>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+<script src="<?php echo base_url('asserts/js/bootstrap.min.js') ?>" ></script>
+
+</body>
+</html>
+
+```
 
 [Voltar ao Índice](#indice)
 

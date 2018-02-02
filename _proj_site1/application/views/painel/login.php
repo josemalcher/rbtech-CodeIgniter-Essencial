@@ -19,28 +19,16 @@
                 echo '<div class="alert alert-danger">' . $msg .'</div>';
             endif;
 
-
-            echo form_label('Nome de Login','login');
+            echo form_label('Usuário','login');
             echo form_input('login',set_value('login'), array('class'=>'form-control'));
-
-            echo form_label('Email Administrador','email');
-            echo form_input('email',set_value('email'), array('class'=>'form-control'));
 
             echo form_label('Senha','senha');
             echo form_password('senha',set_value('senha'), array('class'=>'form-control'));
 
-            echo form_label('Repita a Senha','senha2');
-            echo form_password('senha2',set_value('senha2'), array('class'=>'form-control'));
-
-            echo form_submit('enviar','Salvar Dados', array('class'=>'btn btn-primary'));
+            echo form_submit('enviar','Autenticar', array('class'=>'btn btn-primary'));
 
         echo form_close();
-
-
 ?>
-
-
-
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
